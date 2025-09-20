@@ -27,6 +27,7 @@ jobs:
         uses: microsoft/security-devops-action@v1
         with:
           categories: 'IaC,Secrets'
+          version: latest
 
       # Step 3: List MSDO results
       - name: List MSDO results
