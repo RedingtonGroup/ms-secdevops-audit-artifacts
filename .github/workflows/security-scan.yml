@@ -8,10 +8,10 @@ on:
   workflow_dispatch:
 
 permissions:
-  actions: read           # ✅ Add this
+  actions: read           #  Add this
   contents: read
-  security-events: write  # ✅ Needed for SARIF upload
-  id-token: write         # ✅ Needed for MSDO
+  security-events: write  #  Needed for SARIF upload
+  id-token: write         #  Needed for MSDO
 
 jobs:
   msdo:
