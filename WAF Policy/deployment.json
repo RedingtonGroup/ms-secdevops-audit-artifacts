@@ -1,0 +1,38 @@
+{
+  "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/RG_VNET/providers/Microsoft.Resources/deployments/WAFPolicyCreation-20250916173905",
+  "name": "WAFPolicyCreation-20250916173905",
+  "type": "Microsoft.Resources/deployments",
+  "properties": {
+    "templateHash": "4841022520334300756",
+    "parameters": {},
+    "mode": "Incremental",
+    "debugSetting": {
+      "detailLevel": "None"
+    },
+    "provisioningState": "Succeeded",
+    "timestamp": "2025-09-16T12:09:11.3258256Z",
+    "duration": "PT3.7240597S",
+    "correlationId": "42e873f8-67c6-4526-958d-fe7ace99cc6e",
+    "providers": [
+      {
+        "namespace": "Microsoft.Network",
+        "resourceTypes": [
+          {
+            "resourceType": "applicationGatewayWebApplicationFirewallPolicies",
+            "locations": [
+              "centralindia"
+            ]
+          }
+        ]
+      }
+    ],
+    "dependencies": [],
+    "outputResources": [
+      {
+        "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/RG_VNET/providers/Microsoft.Network/applicationGatewayWebApplicationFirewallPolicies/waf"
+      }
+    ],
+    "validationLevel": "Template"
+  },
+  "tags": {}
+}

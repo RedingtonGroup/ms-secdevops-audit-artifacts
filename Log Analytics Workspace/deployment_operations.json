@@ -1,0 +1,31 @@
+[
+  {
+    "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/RG_LOGWORK/providers/Microsoft.Resources/deployments/Microsoft.Template-20250915170418/operations/4181F45FD82D405F",
+    "operationId": "4181F45FD82D405F",
+    "properties": {
+      "provisioningOperation": "Create",
+      "provisioningState": "Succeeded",
+      "timestamp": "2025-09-15T11:34:21.6047146Z",
+      "duration": "PT25.6781633S",
+      "trackingId": "0dcdca21-22be-4feb-a786-1beb1b27f265",
+      "statusCode": "OK",
+      "targetResource": {
+        "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/RG_LOGWORK/providers/Microsoft.OperationalInsights/workspaces/gis-lgw",
+        "resourceType": "Microsoft.OperationalInsights/workspaces",
+        "resourceName": "gis-lgw"
+      }
+    }
+  },
+  {
+    "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/RG_LOGWORK/providers/Microsoft.Resources/deployments/Microsoft.Template-20250915170418/operations/08584436708246414749",
+    "operationId": "08584436708246414749",
+    "properties": {
+      "provisioningOperation": "EvaluateDeploymentOutput",
+      "provisioningState": "Succeeded",
+      "timestamp": "2025-09-15T11:34:21.6047146Z",
+      "duration": "PT25.7562963S",
+      "trackingId": "1254cf61-b444-4355-8ff5-1a0d1ce4d592",
+      "statusCode": "OK"
+    }
+  }
+]

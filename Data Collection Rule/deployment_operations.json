@@ -1,0 +1,31 @@
+[
+  {
+    "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/RG_LOGWORK/providers/Microsoft.Resources/deployments/CreateDCRDeployment-2025-09-19T11.53.31.872Z/operations/CFB5DA4EE5D6FA2D",
+    "operationId": "CFB5DA4EE5D6FA2D",
+    "properties": {
+      "provisioningOperation": "Create",
+      "provisioningState": "Succeeded",
+      "timestamp": "2025-09-19T11:53:42.7037661Z",
+      "duration": "PT5.8027237S",
+      "trackingId": "2996c0e7-3556-4a13-851f-808d88182d7c",
+      "statusCode": "OK",
+      "targetResource": {
+        "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/RG_LOGWORK/providers/Microsoft.Insights/dataCollectionRules/MSVMI-gis-dc-datacoll",
+        "resourceType": "Microsoft.Insights/dataCollectionRules",
+        "resourceName": "MSVMI-gis-dc-datacoll"
+      }
+    }
+  },
+  {
+    "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/RG_LOGWORK/providers/Microsoft.Resources/deployments/CreateDCRDeployment-2025-09-19T11.53.31.872Z/operations/08584433240663007062",
+    "operationId": "08584433240663007062",
+    "properties": {
+      "provisioningOperation": "EvaluateDeploymentOutput",
+      "provisioningState": "Succeeded",
+      "timestamp": "2025-09-19T11:53:42.7037661Z",
+      "duration": "PT5.8808502S",
+      "trackingId": "5011dd62-cf21-46d8-855c-7139012f0a89",
+      "statusCode": "OK"
+    }
+  }
+]

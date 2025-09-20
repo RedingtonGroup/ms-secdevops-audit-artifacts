@@ -1,0 +1,181 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "type": "String"
+        },
+        "networkInterfaceName2": {
+            "type": "String"
+        },
+        "networkSecurityGroupName": {
+            "type": "String"
+        },
+        "networkSecurityGroupRules": {
+            "type": "Array"
+        },
+        "subnetId": {
+            "type": "String"
+        },
+        "virtualNetworkId": {
+            "type": "String"
+        },
+        "virtualMachineName": {
+            "type": "String"
+        },
+        "virtualMachineName2": {
+            "type": "String"
+        },
+        "virtualMachineComputerName2": {
+            "type": "String"
+        },
+        "virtualMachineRG": {
+            "type": "String"
+        },
+        "osDiskDeleteOption": {
+            "type": "String"
+        },
+        "dataDisks2": {
+            "type": "Array"
+        },
+        "dataDiskResources2": {
+            "type": "Array"
+        },
+        "virtualMachineSize": {
+            "type": "String"
+        },
+        "nicDeleteOption": {
+            "type": "String"
+        },
+        "hibernationEnabled": {
+            "type": "Bool"
+        },
+        "virtualMachine2Zone": {
+            "type": "String"
+        }
+    },
+    "variables": {
+        "nsgId": "[resourceId(resourceGroup().name, 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]",
+        "subnetRef": "[parameters('subnetId')]",
+        "vnetId": "[parameters('virtualNetworkId')]",
+        "vnetName": "[last(split(variables('vnetId'), '/'))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2022-11-01",
+            "name": "[parameters('networkInterfaceName2')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/networkSecurityGroups/', parameters('networkSecurityGroupName'))]"
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "subnet": {
+                                "id": "[variables('subnetRef')]"
+                            },
+                            "privateIPAllocationMethod": "Dynamic"
+                        }
+                    }
+                ],
+                "networkSecurityGroup": {
+                    "id": "[variables('nsgId')]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2020-05-01",
+            "name": "[parameters('networkSecurityGroupName')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "securityRules": "[parameters('networkSecurityGroupRules')]"
+            }
+        },
+        {
+            "type": "Microsoft.Compute/disks",
+            "apiVersion": "2022-03-02",
+            "name": "[parameters('dataDiskResources2')[copyIndex()].name]",
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "[parameters('dataDiskResources2')[copyIndex()].sku]"
+            },
+            "zones": "[if(contains(parameters('dataDiskResources2')[copyIndex()].sku, '_ZRS'), json('null'), array(parameters('virtualMachine2Zone')))]",
+            "properties": "[parameters('dataDiskResources2')[copyIndex()].properties]",
+            "copy": {
+                "name": "managedDiskResources",
+                "count": "[length(parameters('dataDiskResources2'))]"
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2024-03-01",
+            "name": "[parameters('virtualMachineName2')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "managedDiskResources",
+                "[concat('Microsoft.Network/networkInterfaces/', parameters('networkInterfaceName2'))]"
+            ],
+            "zones": [
+                "[parameters('virtualMachine2Zone')]"
+            ],
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[parameters('virtualMachineSize')]"
+                },
+                "storageProfile": {
+                    "osDisk": {
+                        "createOption": "attach",
+                        "osType": "Windows",
+                        "managedDisk": {
+                            "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/rg-gis-01/providers/Microsoft.Compute/disks/gis-app02-OSDisk"
+                        },
+                        "deleteOption": "[parameters('osDiskDeleteOption')]"
+                    },
+                    "copy": [
+                        {
+                            "name": "dataDisks",
+                            "count": "[length(parameters('dataDisks2'))]",
+                            "input": {
+                                "name": "[parameters('dataDisks2')[copyIndex('dataDisks')].name]",
+                                "lun": "[parameters('dataDisks2')[copyIndex('dataDisks')].lun]",
+                                "createOption": "[parameters('dataDisks2')[copyIndex('dataDisks')].createOption]",
+                                "caching": "[parameters('dataDisks2')[copyIndex('dataDisks')].caching]",
+                                "diskSizeGB": "[parameters('dataDisks2')[copyIndex('dataDisks')].diskSizeGB]",
+                                "managedDisk": {
+                                    "storageAccountType": "[parameters('dataDisks2')[copyIndex('dataDisks')].storageAccountType]",
+                                    "id": "[coalesce(parameters('dataDisks2')[copyIndex('dataDisks')].id, if(equals(parameters('dataDisks2')[copyIndex('dataDisks')].name, json('null')), json('null'), resourceId('Microsoft.Compute/disks', parameters('dataDisks2')[copyIndex('dataDisks')].name)))]"
+                                },
+                                "deleteOption": "[parameters('dataDisks2')[copyIndex('dataDisks')].deleteOption]",
+                                "writeAcceleratorEnabled": "[parameters('dataDisks2')[copyIndex('dataDisks')].writeAcceleratorEnabled]"
+                            }
+                        }
+                    ]
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaceName2'))]",
+                            "properties": {
+                                "deleteOption": "[parameters('nicDeleteOption')]"
+                            }
+                        }
+                    ]
+                },
+                "securityProfile": {},
+                "additionalCapabilities": {
+                    "hibernationEnabled": false
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true
+                    }
+                }
+            }
+        }
+    ],
+    "outputs": {}
+}

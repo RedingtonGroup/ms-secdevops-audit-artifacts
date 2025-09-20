@@ -1,0 +1,95 @@
+{
+  "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/RG_VNET/providers/Microsoft.Resources/deployments/Microsoft.Template-20250915133813",
+  "name": "Microsoft.Template-20250915133813",
+  "type": "Microsoft.Resources/deployments",
+  "properties": {
+    "templateHash": "5033344882987119899",
+    "parameters": {
+      "location": {
+        "type": "String",
+        "value": "centralindia"
+      },
+      "resourceGroup": {
+        "type": "String",
+        "value": "RG_VNET"
+      },
+      "firewallPolicyName": {
+        "type": "String",
+        "value": "gis-fw-app"
+      }
+    },
+    "mode": "Incremental",
+    "debugSetting": {
+      "detailLevel": "None"
+    },
+    "provisioningState": "Succeeded",
+    "timestamp": "2025-09-15T08:08:57.5249959Z",
+    "duration": "PT40.750332S",
+    "correlationId": "086abaf8-56d8-4a14-985f-6f60d12354b6",
+    "providers": [
+      {
+        "namespace": "Microsoft.Network",
+        "resourceTypes": [
+          {
+            "resourceType": "firewallPolicies",
+            "locations": [
+              "centralindia"
+            ]
+          },
+          {
+            "resourceType": "firewallPolicies/ruleCollectionGroups",
+            "locations": [
+              "centralindia"
+            ]
+          }
+        ]
+      }
+    ],
+    "dependencies": [
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/RG_VNET/providers/Microsoft.Network/firewallPolicies/gis-fw-app",
+            "resourceType": "Microsoft.Network/firewallPolicies",
+            "resourceName": "gis-fw-app"
+          }
+        ],
+        "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/RG_VNET/providers/Microsoft.Network/firewallPolicies/gis-fw-app/ruleCollectionGroups/DefaultNetworkRuleCollectionGroup",
+        "resourceType": "Microsoft.Network/firewallPolicies/ruleCollectionGroups",
+        "resourceName": "gis-fw-app/DefaultNetworkRuleCollectionGroup"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/RG_VNET/providers/Microsoft.Network/firewallPolicies/gis-fw-app/ruleCollectionGroups/DefaultNetworkRuleCollectionGroup",
+            "resourceType": "Microsoft.Network/firewallPolicies/ruleCollectionGroups",
+            "resourceName": "gis-fw-app/DefaultNetworkRuleCollectionGroup"
+          },
+          {
+            "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/RG_VNET/providers/Microsoft.Network/firewallPolicies/gis-fw-app",
+            "resourceType": "Microsoft.Network/firewallPolicies",
+            "resourceName": "gis-fw-app"
+          }
+        ],
+        "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/RG_VNET/providers/Microsoft.Network/firewallPolicies/gis-fw-app/ruleCollectionGroups/DefaultApplicationRuleCollectionGroup",
+        "resourceType": "Microsoft.Network/firewallPolicies/ruleCollectionGroups",
+        "resourceName": "gis-fw-app/DefaultApplicationRuleCollectionGroup"
+      }
+    ],
+    "outputResources": [
+      {
+        "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/RG_VNET/providers/Microsoft.Network/firewallPolicies/gis-fw-app"
+      },
+      {
+        "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/RG_VNET/providers/Microsoft.Network/firewallPolicies/gis-fw-app/ruleCollectionGroups/DefaultApplicationRuleCollectionGroup"
+      },
+      {
+        "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/RG_VNET/providers/Microsoft.Network/firewallPolicies/gis-fw-app/ruleCollectionGroups/DefaultNetworkRuleCollectionGroup"
+      }
+    ],
+    "validationLevel": "Template"
+  },
+  "tags": {
+    "marketplaceItemId": "Microsoft.Template"
+  }
+}

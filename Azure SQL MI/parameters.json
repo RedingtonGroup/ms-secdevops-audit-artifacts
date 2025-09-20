@@ -1,0 +1,118 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "centralindia"
+        },
+        "managedInstanceName": {
+            "value": "gis-db-srv"
+        },
+        "deployInExistingSubnet": {
+            "value": true
+        },
+        "virtualNetworkResourceGroupName": {
+            "value": "RG_VNET"
+        },
+        "virtualNetworkName": {
+            "value": "vnet-spoke-01"
+        },
+        "subnetName": {
+            "value": "subnet-gis-db"
+        },
+        "skuName": {
+            "value": "GP_Gen5"
+        },
+        "skuEdition": {
+            "value": "GeneralPurpose"
+        },
+        "hardwareFamily": {
+            "value": "Gen5"
+        },
+        "storageSizeInGB": {
+            "value": 96
+        },
+        "vCores": {
+            "value": 4
+        },
+        "licenseType": {
+            "value": "LicenseIncluded"
+        },
+        "hybridSecondaryUsage": {
+            "value": "Active"
+        },
+        "dnsZonePartner": {
+            "value": ""
+        },
+        "collation": {
+            "value": "SQL_Latin1_General_CP1_CI_AS"
+        },
+        "timezoneId": {
+            "value": "India Standard Time"
+        },
+        "proxyOverride": {
+            "value": "Proxy"
+        },
+        "publicDataEndpointEnabled": {
+            "value": true
+        },
+        "nsgForPublicEndpoint": {
+            "value": "allowFromAzureCloudTo3342NSG"
+        },
+        "minimalTlsVersion": {
+            "value": "1.2"
+        },
+        "administratorLogin": {
+            "value": "gisdbadmin"
+        },
+        "administratorLoginPassword": {
+            "value": null
+        },
+        "administrators": {
+            "value": {}
+        },
+        "managedInstanceTags": {
+            "value": {}
+        },
+        "requestedBackupStorageRedundancy": {
+            "value": "Zone"
+        },
+        "maintenanceConfigurationId": {
+            "value": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/providers/Microsoft.Maintenance/publicMaintenanceConfigurations/SQL_Default"
+        },
+        "zoneRedundant": {
+            "value": true
+        },
+        "databaseFormat": {
+            "value": "AlwaysUpToDate"
+        },
+        "enableADS": {
+            "value": false
+        },
+        "enableVA": {
+            "value": false
+        },
+        "pricingModel": {
+            "value": "Regular"
+        },
+        "instancePoolId": {
+            "value": ""
+        },
+        "identity": {
+            "value": {
+                "type": "SystemAssigned"
+            }
+        },
+        "primaryUserAssignedIdentityId": {
+            "value": ""
+        },
+        "federatedClientId": {
+            "value": ""
+        },
+        "servicePrincipal": {
+            "value": {
+                "type": "None"
+            }
+        }
+    }
+}

@@ -1,0 +1,65 @@
+[
+  {
+    "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/rg-audit/providers/Microsoft.Resources/deployments/Microsoft.Template-20250916175141/operations/B20DC47A3AC851C2",
+    "operationId": "B20DC47A3AC851C2",
+    "properties": {
+      "provisioningOperation": "Create",
+      "provisioningState": "Succeeded",
+      "timestamp": "2025-09-16T12:21:53.0931506Z",
+      "duration": "PT9.0229924S",
+      "trackingId": "4de48a12-fa5e-45ee-b8dd-64787ab4334a",
+      "statusCode": "OK",
+      "targetResource": {
+        "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/providers/Microsoft.Resources/deployments/qhkjcrrrvpbas",
+        "resourceType": "Microsoft.Resources/deployments",
+        "resourceName": "qhkjcrrrvpbas"
+      }
+    }
+  },
+  {
+    "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/rg-audit/providers/Microsoft.Resources/deployments/Microsoft.Template-20250916175141/operations/998B3BF1D87AC215",
+    "operationId": "998B3BF1D87AC215",
+    "properties": {
+      "provisioningOperation": "Create",
+      "provisioningState": "Succeeded",
+      "timestamp": "2025-09-16T12:21:44.6310809Z",
+      "duration": "PT33.8879888S",
+      "trackingId": "10ebfb0c-30f2-4c06-a74e-396d38359ac2",
+      "statusCode": "OK",
+      "targetResource": {
+        "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/rg-gis-01/providers/Microsoft.Resources/deployments/pe5ilokgjyxrk",
+        "resourceType": "Microsoft.Resources/deployments",
+        "resourceName": "pe5ilokgjyxrk"
+      }
+    }
+  },
+  {
+    "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/rg-audit/providers/Microsoft.Resources/deployments/Microsoft.Template-20250916175141/operations/83C9379ADF8EDF7B",
+    "operationId": "83C9379ADF8EDF7B",
+    "properties": {
+      "provisioningOperation": "Create",
+      "provisioningState": "Succeeded",
+      "timestamp": "2025-09-16T12:21:44.6310809Z",
+      "duration": "PT8.3729399S",
+      "trackingId": "773d8465-8c18-494f-9f17-5ebb74f4afbe",
+      "statusCode": "OK",
+      "targetResource": {
+        "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/rg-audit/providers/Microsoft.Maintenance/maintenanceConfigurations/vm-update",
+        "resourceType": "Microsoft.Maintenance/maintenanceConfigurations",
+        "resourceName": "vm-update"
+      }
+    }
+  },
+  {
+    "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/rg-audit/providers/Microsoft.Resources/deployments/Microsoft.Template-20250916175141/operations/08584435815813554117",
+    "operationId": "08584435815813554117",
+    "properties": {
+      "provisioningOperation": "EvaluateDeploymentOutput",
+      "provisioningState": "Succeeded",
+      "timestamp": "2025-09-16T12:22:18.7264241Z",
+      "duration": "PT0.2927161S",
+      "trackingId": "63b7c286-cbc3-4034-91fc-99a1ac152ceb",
+      "statusCode": "OK"
+    }
+  }
+]

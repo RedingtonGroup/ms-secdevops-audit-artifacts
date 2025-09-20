@@ -1,0 +1,59 @@
+{
+  "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/RG_LOGWORK/providers/Microsoft.Resources/deployments/Microsoft.Template-20250915170418",
+  "name": "Microsoft.Template-20250915170418",
+  "type": "Microsoft.Resources/deployments",
+  "properties": {
+    "templateHash": "6515857184163370302",
+    "parameters": {
+      "name": {
+        "type": "String",
+        "value": "gis-lgw"
+      },
+      "location": {
+        "type": "String",
+        "value": "centralindia"
+      },
+      "sku": {
+        "type": "String",
+        "value": "pergb2018"
+      },
+      "tags": {
+        "type": "Object",
+        "value": {
+          "application": "gis"
+        }
+      }
+    },
+    "mode": "Incremental",
+    "debugSetting": {
+      "detailLevel": "None"
+    },
+    "provisioningState": "Succeeded",
+    "timestamp": "2025-09-15T11:34:47.3766273Z",
+    "duration": "PT26.5549094S",
+    "correlationId": "d1a1cb7b-7c28-4917-b9c1-7c8ed7526159",
+    "providers": [
+      {
+        "namespace": "Microsoft.OperationalInsights",
+        "resourceTypes": [
+          {
+            "resourceType": "workspaces",
+            "locations": [
+              "centralindia"
+            ]
+          }
+        ]
+      }
+    ],
+    "dependencies": [],
+    "outputResources": [
+      {
+        "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/RG_LOGWORK/providers/Microsoft.OperationalInsights/workspaces/gis-lgw"
+      }
+    ],
+    "validationLevel": "Template"
+  },
+  "tags": {
+    "marketplaceItemId": "Microsoft.Template"
+  }
+}

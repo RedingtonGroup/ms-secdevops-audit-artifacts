@@ -1,0 +1,109 @@
+{
+  "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/rg-audit/providers/Microsoft.Resources/deployments/Microsoft.Template-20250916175141",
+  "name": "Microsoft.Template-20250916175141",
+  "type": "Microsoft.Resources/deployments",
+  "properties": {
+    "templateHash": "5797639995661423976",
+    "parameters": {
+      "maintenanceConfigName": {
+        "type": "String",
+        "value": "vm-update"
+      },
+      "maintenanceConfigLocation": {
+        "type": "String",
+        "value": "centralindia"
+      },
+      "maintenanceSchedule": {
+        "type": "Object",
+        "value": {
+          "startDateTime": "2025-09-16 00:00",
+          "duration": "03:55",
+          "timeZone": "India Standard Time",
+          "expirationDateTime": null,
+          "recurEvery": "1Week Saturday"
+        }
+      },
+      "maintenanceScope": {
+        "type": "String",
+        "value": "InGuestPatch"
+      }
+    },
+    "mode": "Incremental",
+    "debugSetting": {
+      "detailLevel": "None"
+    },
+    "provisioningState": "Succeeded",
+    "timestamp": "2025-09-16T12:22:19.1753315Z",
+    "duration": "PT35.0638733S",
+    "correlationId": "c882d244-dc6a-4cf8-bb5d-e6ab7a358866",
+    "providers": [
+      {
+        "namespace": "Microsoft.Maintenance",
+        "resourceTypes": [
+          {
+            "resourceType": "maintenanceConfigurations",
+            "locations": [
+              "centralindia"
+            ]
+          }
+        ]
+      },
+      {
+        "namespace": "Microsoft.Resources",
+        "resourceTypes": [
+          {
+            "resourceType": "deployments",
+            "locations": [
+              null,
+              "centralindia"
+            ]
+          }
+        ]
+      }
+    ],
+    "dependencies": [
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/rg-audit/providers/Microsoft.Maintenance/maintenanceConfigurations/vm-update",
+            "resourceType": "Microsoft.Maintenance/maintenanceConfigurations",
+            "resourceName": "vm-update"
+          }
+        ],
+        "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/rg-gis-01/providers/Microsoft.Resources/deployments/pe5ilokgjyxrk",
+        "resourceType": "Microsoft.Resources/deployments",
+        "resourceName": "pe5ilokgjyxrk"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/rg-audit/providers/Microsoft.Maintenance/maintenanceConfigurations/vm-update",
+            "resourceType": "Microsoft.Maintenance/maintenanceConfigurations",
+            "resourceName": "vm-update"
+          }
+        ],
+        "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/providers/Microsoft.Resources/deployments/qhkjcrrrvpbas",
+        "resourceType": "Microsoft.Resources/deployments",
+        "resourceName": "qhkjcrrrvpbas"
+      }
+    ],
+    "outputResources": [
+      {
+        "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/providers/Microsoft.Maintenance/configurationAssignments/vm-updateDynamicAssignment1"
+      },
+      {
+        "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/rg-audit/providers/Microsoft.Maintenance/maintenanceConfigurations/vm-update"
+      },
+      {
+        "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/rg-gis-01/providers/microsoft.compute/virtualMachines/gis-app01/providers/Microsoft.Maintenance/configurationAssignments/vm-updateAssignment"
+      },
+      {
+        "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/rg-gis-01/providers/microsoft.compute/virtualMachines/gis-app02/providers/Microsoft.Maintenance/configurationAssignments/vm-updateAssignment"
+      }
+    ],
+    "validationLevel": "Template"
+  },
+  "tags": {
+    "marketplaceItemId": "Microsoft.Template"
+  }
+}

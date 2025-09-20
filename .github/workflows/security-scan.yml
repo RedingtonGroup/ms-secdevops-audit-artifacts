@@ -1,0 +1,43 @@
+name: Security Analysis
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  actions: read           # ✅ Add this
+  contents: read
+  security-events: write  # ✅ Needed for SARIF upload
+  id-token: write         # ✅ Needed for MSDO
+
+jobs:
+  msdo:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Microsoft Security DevOps Scan
+        uses: microsoft/security-devops-action@v1
+        with:
+          categories: 'IaC,Secrets'
+
+      - name: List MSDO results
+        run: ls -R ${{ github.workspace }}/.gdn || echo "No results found"
+
+      - name: Upload MSDO artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: msdo-results
+          path: ${{ github.workspace }}/.gdn/**
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Upload SARIF results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ${{ github.workspace }}/.gdn/msdo.sarif

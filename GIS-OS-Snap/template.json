@@ -1,0 +1,61 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "apiVersion": {
+            "type": "String"
+        },
+        "name": {
+            "type": "String"
+        },
+        "location": {
+            "type": "String"
+        },
+        "accountType": {
+            "type": "String"
+        },
+        "createOption": {
+            "type": "String"
+        },
+        "sourceUri": {
+            "type": "String"
+        },
+        "incremental": {
+            "type": "String"
+        },
+        "diskEncryptionSetType": {
+            "type": "String"
+        },
+        "dataAccessAuthMode": {
+            "type": "String"
+        },
+        "networkAccessPolicy": {
+            "type": "String"
+        },
+        "publicNetworkAccess": {
+            "type": "String"
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Compute/snapshots",
+            "apiVersion": "[parameters('apiVersion')]",
+            "name": "[parameters('name')]",
+            "location": "[parameters('location')]",
+            "tags": {},
+            "sku": {
+                "name": "[parameters('accountType')]"
+            },
+            "properties": {
+                "creationData": {
+                    "createOption": "[parameters('createOption')]",
+                    "sourceResourceId": "[parameters('sourceUri')]"
+                },
+                "dataAccessAuthMode": "[parameters('dataAccessAuthMode')]",
+                "networkAccessPolicy": "[parameters('networkAccessPolicy')]",
+                "publicNetworkAccess": "[parameters('publicNetworkAccess')]",
+                "incremental": "[parameters('incremental')]"
+            }
+        }
+    ]
+}

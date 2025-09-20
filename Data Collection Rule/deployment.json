@@ -1,0 +1,32 @@
+{
+  "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/RG_LOGWORK/providers/Microsoft.Resources/deployments/CreateDCRDeployment-2025-09-19T11.53.31.872Z",
+  "name": "CreateDCRDeployment-2025-09-19T11.53.31.872Z",
+  "type": "Microsoft.Resources/deployments",
+  "properties": {
+    "templateHash": "17397708826086478635",
+    "mode": "Incremental",
+    "provisioningState": "Succeeded",
+    "timestamp": "2025-09-19T11:53:48.615916Z",
+    "duration": "PT9.4464588S",
+    "correlationId": "009b9145-67bd-436c-a0e6-294fe6290edd",
+    "providers": [
+      {
+        "namespace": "Microsoft.Insights",
+        "resourceTypes": [
+          {
+            "resourceType": "dataCollectionRules",
+            "locations": [
+              "centralindia"
+            ]
+          }
+        ]
+      }
+    ],
+    "dependencies": [],
+    "outputResources": [
+      {
+        "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/RG_LOGWORK/providers/Microsoft.Insights/dataCollectionRules/MSVMI-gis-dc-datacoll"
+      }
+    ]
+  }
+}

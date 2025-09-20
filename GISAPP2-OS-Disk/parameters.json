@@ -1,0 +1,42 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "diskName": {
+            "value": "gis-app02-OSDisk"
+        },
+        "location": {
+            "value": "centralindia"
+        },
+        "sku": {
+            "value": "Premium_LRS"
+        },
+        "diskSizeGb": {
+            "value": 100
+        },
+        "sourceResourceId": {
+            "value": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/rg-gis-01/providers/Microsoft.Compute/snapshots/gis-app01-snap"
+        },
+        "createOption": {
+            "value": "copy"
+        },
+        "hyperVGeneration": {
+            "value": "V1"
+        },
+        "diskEncryptionSetType": {
+            "value": "EncryptionAtRestWithPlatformKey"
+        },
+        "zone": {
+            "value": "2"
+        },
+        "dataAccessAuthMode": {
+            "value": "None"
+        },
+        "networkAccessPolicy": {
+            "value": "AllowAll"
+        },
+        "publicNetworkAccess": {
+            "value": "Enabled"
+        }
+    }
+}

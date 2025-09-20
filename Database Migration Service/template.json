@@ -1,0 +1,28 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "Location": {
+            "minLength": 1,
+            "type": "String"
+        },
+        "Name": {
+            "minLength": 1,
+            "type": "String"
+        },
+        "tags": {
+            "defaultValue": {},
+            "type": "Object"
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.DataMigration/sqlmigrationservices",
+            "apiVersion": "2022-03-30-preview",
+            "name": "[parameters('Name')]",
+            "location": "[parameters('Location')]",
+            "tags": "[parameters('tags')]",
+            "properties": {}
+        }
+    ]
+}

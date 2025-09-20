@@ -1,0 +1,48 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "armProviderNamespace": {
+            "value": "Microsoft.RecoveryServices"
+        },
+        "vaultName": {
+            "value": "az-bkp"
+        },
+        "vaultRG": {
+            "value": "RG_BKP"
+        },
+        "vaultSubID": {
+            "value": "8d704685-c402-4677-9e96-18dd3ec83ddc"
+        },
+        "policyName": {
+            "value": "AppServer"
+        },
+        "fabricName": {
+            "value": "Azure"
+        },
+        "protectionContainers": {
+            "value": [
+                "IaasVMContainer;iaasvmcontainerv2;rg-gis-01;gis-app01",
+                "IaasVMContainer;iaasvmcontainerv2;rg-gis-01;gis-app02"
+            ]
+        },
+        "protectedItems": {
+            "value": [
+                "vm;iaasvmcontainerv2;rg-gis-01;gis-app01",
+                "vm;iaasvmcontainerv2;rg-gis-01;gis-app02"
+            ]
+        },
+        "sourceResourceIds": {
+            "value": [
+                "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/rg-gis-01/providers/Microsoft.Compute/virtualMachines/gis-app01",
+                "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/rg-gis-01/providers/Microsoft.Compute/virtualMachines/gis-app02"
+            ]
+        },
+        "extendedProperties": {
+            "value": [
+                {},
+                {}
+            ]
+        }
+    }
+}

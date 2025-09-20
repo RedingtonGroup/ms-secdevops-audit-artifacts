@@ -1,0 +1,830 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "defaultValue": "[resourceGroup().location]",
+            "type": "String",
+            "metadata": {
+                "description": "The location of the Managed Instance. Default is the location of the selected resource group."
+            }
+        },
+        "managedInstanceName": {
+            "type": "String",
+            "metadata": {
+                "description": "The name of the Managed Instance."
+            }
+        },
+        "deployInExistingSubnet": {
+            "defaultValue": false,
+            "type": "Bool",
+            "metadata": {
+                "description": "Determines whether the Managed Instance will be deployed in an existing subnet. Subnet parameters need to be valid if this is set."
+            }
+        },
+        "virtualNetworkResourceGroupName": {
+            "defaultValue": "[resourceGroup().name]",
+            "type": "String",
+            "metadata": {
+                "description": "The resource group where the networking resources will be created or updated. Default is the same resource group as Managed Instance."
+            }
+        },
+        "virtualNetworkName": {
+            "defaultValue": "[concat('vnet-', parameters('managedInstanceName'))]",
+            "type": "String",
+            "metadata": {
+                "description": "The virtual network name. Leave empty for the default value."
+            }
+        },
+        "subnetName": {
+            "defaultValue": "ManagedInstance",
+            "type": "String",
+            "metadata": {
+                "description": "The subnet name. Leave empty for the default value."
+            }
+        },
+        "skuName": {
+            "defaultValue": "GP_Gen5",
+            "allowedValues": [
+                "GP_Gen4",
+                "GP_Gen5",
+                "GP_G8IM",
+                "GP_G8IH",
+                "BC_Gen4",
+                "BC_Gen5",
+                "BC_G8IM",
+                "BC_G8IH"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "Managed instance SKU. If SKU is not set, skuEdition and hardwareFamily values have to be populated."
+            }
+        },
+        "skuEdition": {
+            "defaultValue": "GeneralPurpose",
+            "allowedValues": [
+                "GeneralPurpose",
+                "BusinessCritical"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "SKU Edition for the Managed Instance. In case skuName is set this parameter is ignored."
+            }
+        },
+        "hardwareFamily": {
+            "defaultValue": "Gen5",
+            "allowedValues": [
+                "Gen4",
+                "Gen5",
+                "Gen8IM",
+                "Gen8IH"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "Compute generation for the instance. In case skuName is set this parameter is ignored."
+            }
+        },
+        "storageSizeInGB": {
+            "defaultValue": 256,
+            "minValue": 32,
+            "type": "Int",
+            "metadata": {
+                "description": "Determines how much Storage size in GB to associate with instance. Increments of 32 GB allowed only."
+            }
+        },
+        "vCores": {
+            "defaultValue": 8,
+            "allowedValues": [
+                2,
+                4,
+                6,
+                8,
+                10,
+                12,
+                16,
+                20,
+                24,
+                32,
+                40,
+                48,
+                56,
+                64,
+                80,
+                96,
+                128
+            ],
+            "type": "Int",
+            "metadata": {
+                "description": "The number of vCores."
+            }
+        },
+        "licenseType": {
+            "defaultValue": "LicenseIncluded",
+            "allowedValues": [
+                "LicenseIncluded",
+                "BasePrice"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "Determines license pricing model. Select 'LicenseIncluded' for a regular price inclusive of a new SQL license. Select 'Base Price' for a discounted AHB price for bringing your own SQL licenses."
+            }
+        },
+        "hybridSecondaryUsage": {
+            "defaultValue": "Active",
+            "allowedValues": [
+                "Active",
+                "Passive"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "Determines whether Hybrid failover rights benefit is activated. Select 'Passive' to enable this benefit."
+            }
+        },
+        "dnsZonePartner": {
+            "defaultValue": "",
+            "type": "String",
+            "metadata": {
+                "description": "The resource id of another Managed Instance whose DNS zone this Managed Instance will share after creation."
+            }
+        },
+        "collation": {
+            "defaultValue": "SQL_Latin1_General_CP1_CI_AS",
+            "type": "String",
+            "metadata": {
+                "description": "Collation of the Managed Instance."
+            }
+        },
+        "timezoneId": {
+            "defaultValue": "UTC",
+            "type": "String",
+            "metadata": {
+                "description": "Id of the timezone. Allowed values are timezones supported by Windows."
+            }
+        },
+        "proxyOverride": {
+            "defaultValue": "Proxy",
+            "allowedValues": [
+                "Proxy",
+                "Redirect"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "Determines connection type for private endpoint. Proxy connection type enables proxy connectivity to Managed Instance. Redirect mode enables direct connectivity to the instance resulting in improved latency and throughput."
+            }
+        },
+        "publicDataEndpointEnabled": {
+            "defaultValue": false,
+            "type": "Bool",
+            "metadata": {
+                "description": "Determines whether public data endpoint will be enabled, required for clients outside of the connected virtual networks. Public endpoint will always default to Proxy connection mode."
+            }
+        },
+        "nsgForPublicEndpoint": {
+            "defaultValue": "",
+            "allowedValues": [
+                "",
+                "allowFromInternetTo3342NSG",
+                "allowFromAzureCloudTo3342NSG",
+                "disallowTrafficTo3342NSG"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "Determines which NSG inbound traffic rule to add for the public endpoint. In case publicDataEndpointEnabled is false this parameter is ignored."
+            }
+        },
+        "minimalTlsVersion": {
+            "defaultValue": "1.2",
+            "allowedValues": [
+                "1.0",
+                "1.1",
+                "1.2"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "The minimum TLS version enforced by the Managed Instance for inbound connections."
+            }
+        },
+        "administratorLogin": {
+            "defaultValue": "",
+            "type": "String",
+            "metadata": {
+                "description": "The login of the Managed Instance admin."
+            }
+        },
+        "administratorLoginPassword": {
+            "defaultValue": "",
+            "type": "SecureString",
+            "metadata": {
+                "description": "The password of the Managed Instance admin."
+            }
+        },
+        "administrators": {
+            "defaultValue": {},
+            "type": "Object"
+        },
+        "managedInstanceTags": {
+            "defaultValue": {},
+            "type": "Object",
+            "metadata": {
+                "description": "Resource tags to associate with the instance."
+            }
+        },
+        "requestedBackupStorageRedundancy": {
+            "defaultValue": "Geo",
+            "allowedValues": [
+                "Geo",
+                "Zone",
+                "Local",
+                "GeoZone"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "Option for configuring backup storage redundancy. Selecting 'Geo' will enable 'RA-GRS'."
+            }
+        },
+        "maintenanceConfigurationId": {
+            "defaultValue": "",
+            "type": "String",
+            "metadata": {
+                "description": "Maintenance configuration id assigned to the database. This configuration defines the period when the maintenance updates will occur."
+            }
+        },
+        "zoneRedundant": {
+            "defaultValue": false,
+            "type": "Bool",
+            "metadata": {
+                "description": "Determines whether zone redundancy will be enabled."
+            }
+        },
+        "databaseFormat": {
+            "defaultValue": "SQLServer2022",
+            "allowedValues": [
+                "SQLServer2025",
+                "SQLServer2022",
+                "AlwaysUpToDate"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "Specifies the internal format of instance databases specific to the SQL engine version. Corresponds to instance update policy."
+            }
+        },
+        "enableADS": {
+            "defaultValue": false,
+            "type": "Bool"
+        },
+        "enableVA": {
+            "defaultValue": false,
+            "type": "Bool"
+        },
+        "pricingModel": {
+            "defaultValue": "Regular",
+            "allowedValues": [
+                "Regular",
+                "Freemium"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "Determines whether managed instance is freemium or regular."
+            }
+        },
+        "instancePoolId": {
+            "defaultValue": "",
+            "type": "String",
+            "metadata": {
+                "description": "The Id of the instance pool this managed server belongs to."
+            }
+        },
+        "identity": {
+            "defaultValue": {},
+            "type": "Object"
+        },
+        "primaryUserAssignedIdentityId": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "federatedClientId": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "servicePrincipal": {
+            "defaultValue": {},
+            "type": "Object"
+        }
+    },
+    "variables": {
+        "deploymentName": "[concat('deployRequiredNetworkingResources_', uniqueString(resourceGroup().id))]",
+        "uniqueStorage": "[uniqueString(subscription().subscriptionId, resourceGroup().name, parameters('location'))]",
+        "storageName": "[tolower(concat('sqlva', variables('uniqueStorage')))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2019-04-01",
+            "name": "[variables('storageName')]",
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "Standard_LRS"
+            },
+            "kind": "StorageV2",
+            "properties": {
+                "minimumTlsVersion": "TLS1_2",
+                "supportsHttpsTrafficOnly": true,
+                "allowBlobPublicAccess": false
+            },
+            "condition": "[parameters('enableVA')]"
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-06-01",
+            "name": "[variables('deploymentName')]",
+            "properties": {
+                "mode": "Incremental",
+                "expressionEvaluationOptions": {
+                    "scope": "inner"
+                },
+                "parameters": {
+                    "location": {
+                        "value": "[parameters('location')]"
+                    },
+                    "managedInstanceName": {
+                        "value": "[parameters('managedInstanceName')]"
+                    },
+                    "deployInExistingSubnet": {
+                        "value": "[parameters('deployInExistingSubnet')]"
+                    },
+                    "virtualNetworkName": {
+                        "value": "[parameters('virtualNetworkName')]"
+                    },
+                    "subnetName": {
+                        "value": "[parameters('subnetName')]"
+                    },
+                    "publicDataEndpointEnabled": {
+                        "value": "[parameters('publicDataEndpointEnabled')]"
+                    },
+                    "nsgForPublicEndpoint": {
+                        "value": "[parameters('nsgForPublicEndpoint')]"
+                    },
+                    "managedInstanceTags": {
+                        "value": "[parameters('managedInstanceTags')]"
+                    },
+                    "subnetObject": {
+                        "value": "[if(parameters('deployInExistingSubnet'), reference(resourceId(parameters('virtualNetworkResourceGroupName'), 'Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName')), '2020-05-01'), json('{}'))]"
+                    }
+                },
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                        "location": {
+                            "type": "string"
+                        },
+                        "managedInstanceName": {
+                            "type": "string"
+                        },
+                        "deployInExistingSubnet": {
+                            "type": "bool"
+                        },
+                        "virtualNetworkName": {
+                            "type": "string"
+                        },
+                        "subnetName": {
+                            "type": "string"
+                        },
+                        "publicDataEndpointEnabled": {
+                            "type": "bool"
+                        },
+                        "nsgForPublicEndpoint": {
+                            "type": "string"
+                        },
+                        "managedInstanceTags": {
+                            "type": "object"
+                        },
+                        "subnetObject": {
+                            "type": "object"
+                        }
+                    },
+                    "variables": {
+                        "defaultVirtualNetworkAddressPrefix": "10.0.0.0/16",
+                        "defaultSubnetAddressPrefix": "10.0.0.0/24",
+                        "defaultRouteTableName": "[concat('rt-', parameters('managedInstanceName'))]",
+                        "defaultNetworkSecurityGroupName": "[concat('nsg-', parameters('managedInstanceName'))]",
+                        "subnetHasAddressPrefix": "[and(parameters('deployInExistingSubnet'), contains(parameters('subnetObject'), 'addressPrefix'))]",
+                        "subnetHasAddressPrefixes": "[and(parameters('deployInExistingSubnet'), contains(parameters('subnetObject'), 'addressPrefixes'))]",
+                        "addressPrefixPrefix": "[if(variables('subnetHasAddressPrefix'), parameters('subnetObject').addressPrefix, null())]",
+                        "addressPrefixesPrefix": "[if(variables('subnetHasAddressPrefixes'), first(filter(parameters('subnetObject').addressPrefixes, lambda('address', not(contains(lambdaVariables('address'), ':'))))), null())]",
+                        "addressPrefix": "[if(parameters('deployInExistingSubnet'), coalesce(variables('addressPrefixesPrefix'), variables('addressPrefixPrefix')), variables('defaultSubnetAddressPrefix'))]",
+                        "createRouteTable": "[not(contains(parameters('subnetObject'), 'routeTable'))]",
+                        "createNetworkSecurityGroup": "[not(contains(parameters('subnetObject'), 'networkSecurityGroup'))]",
+                        "delegateToManagedInstance": "[not(and(contains(parameters('subnetObject'), 'delegations'), equals(length(parameters('subnetObject').delegations), 1), equals(parameters('subnetObject').delegations[0].properties.serviceName, 'Microsoft.Sql/managedInstances')))]",
+                        "delegationsObject": [
+                            {
+                                "name": "[concat('dlg-', parameters('managedInstanceName'))]",
+                                "properties": {
+                                    "serviceName": "Microsoft.Sql/managedInstances"
+                                }
+                            }
+                        ],
+                        "defaultNSGs": [
+                            {
+                                "name": "allow_tds_inbound",
+                                "properties": {
+                                    "description": "Allow access to data via TDS",
+                                    "protocol": "Tcp",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "1433",
+                                    "sourceAddressPrefix": "VirtualNetwork",
+                                    "destinationAddressPrefix": "[variables('addressPrefix')]",
+                                    "access": "Allow",
+                                    "priority": 1000,
+                                    "direction": "Inbound"
+                                }
+                            },
+                            {
+                                "name": "allow_redirect_inbound",
+                                "properties": {
+                                    "description": "Allow inbound TDS redirect traffic to Managed Instance inside the virtual network",
+                                    "protocol": "Tcp",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "11000-11999",
+                                    "sourceAddressPrefix": "VirtualNetwork",
+                                    "destinationAddressPrefix": "[variables('addressPrefix')]",
+                                    "access": "Allow",
+                                    "priority": 1100,
+                                    "direction": "Inbound"
+                                }
+                            },
+                            {
+                                "name": "allow_geodr_inbound",
+                                "properties": {
+                                    "description": "Allow inbound GeoDR traffic inside the virtual network",
+                                    "protocol": "Tcp",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "5022",
+                                    "sourceAddressPrefix": "VirtualNetwork",
+                                    "destinationAddressPrefix": "[variables('addressPrefix')]",
+                                    "access": "Allow",
+                                    "priority": 1200,
+                                    "direction": "Inbound"
+                                }
+                            },
+                            {
+                                "name": "deny_all_inbound",
+                                "properties": {
+                                    "description": "Deny all other inbound traffic",
+                                    "protocol": "*",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "*",
+                                    "sourceAddressPrefix": "*",
+                                    "destinationAddressPrefix": "*",
+                                    "access": "Deny",
+                                    "priority": 4096,
+                                    "direction": "Inbound"
+                                }
+                            },
+                            {
+                                "name": "allow_linkedserver_outbound",
+                                "properties": {
+                                    "description": "Allow outbound linked server traffic inside the virtual network",
+                                    "protocol": "Tcp",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "1433",
+                                    "sourceAddressPrefix": "[variables('addressPrefix')]",
+                                    "destinationAddressPrefix": "VirtualNetwork",
+                                    "access": "Allow",
+                                    "priority": 1000,
+                                    "direction": "Outbound"
+                                }
+                            },
+                            {
+                                "name": "allow_redirect_outbound",
+                                "properties": {
+                                    "description": "Allow outbound TDS redirect traffic from Managed Instance inside the virtual network",
+                                    "protocol": "Tcp",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "11000-11999",
+                                    "sourceAddressPrefix": "[variables('addressPrefix')]",
+                                    "destinationAddressPrefix": "VirtualNetwork",
+                                    "access": "Allow",
+                                    "priority": 1100,
+                                    "direction": "Outbound"
+                                }
+                            },
+                            {
+                                "name": "allow_geodr_outbound",
+                                "properties": {
+                                    "description": "Allow outbound GeoDR traffic inside the virtual network",
+                                    "protocol": "Tcp",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "5022",
+                                    "sourceAddressPrefix": "[variables('addressPrefix')]",
+                                    "destinationAddressPrefix": "VirtualNetwork",
+                                    "access": "Allow",
+                                    "priority": 1200,
+                                    "direction": "Outbound"
+                                }
+                            },
+                            {
+                                "name": "allow_privatelink_outbound",
+                                "properties": {
+                                    "description": "Allow outbound Private Link traffic inside the virtual network",
+                                    "protocol": "Tcp",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "443",
+                                    "sourceAddressPrefix": "[variables('addressPrefix')]",
+                                    "destinationAddressPrefix": "VirtualNetwork",
+                                    "access": "Allow",
+                                    "priority": 1300,
+                                    "direction": "Outbound"
+                                }
+                            },
+                            {
+                                "name": "allow_azurecloud_outbound",
+                                "properties": {
+                                    "description": "Allow outbound traffic to Azure Cloud, port 443",
+                                    "protocol": "Tcp",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "443",
+                                    "sourceAddressPrefix": "VirtualNetwork",
+                                    "destinationAddressPrefix": "AzureCloud",
+                                    "access": "Allow",
+                                    "priority": 1400,
+                                    "direction": "Outbound"
+                                }
+                            },
+                            {
+                                "name": "deny_all_outbound",
+                                "properties": {
+                                    "description": "Deny all other outbound traffic",
+                                    "protocol": "*",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "*",
+                                    "sourceAddressPrefix": "*",
+                                    "destinationAddressPrefix": "*",
+                                    "access": "Deny",
+                                    "priority": 4096,
+                                    "direction": "Outbound"
+                                }
+                            }
+                        ],
+                        "allowFromInternetTo3342NSG": [
+                            {
+                                "name": "public_endpoint_inbound",
+                                "properties": {
+                                    "description": "Allow inbound traffic to Managed Instance through public endpoint",
+                                    "protocol": "Tcp",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "3342",
+                                    "sourceAddressPrefix": "Internet",
+                                    "destinationAddressPrefix": "[variables('addressPrefix')]",
+                                    "access": "Allow",
+                                    "priority": 1300,
+                                    "direction": "Inbound"
+                                }
+                            }
+                        ],
+                        "allowFromAzureCloudTo3342NSG": [
+                            {
+                                "name": "public_endpoint_inbound",
+                                "properties": {
+                                    "description": "Allow inbound traffic to Managed Instance through public endpoint",
+                                    "protocol": "Tcp",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "3342",
+                                    "sourceAddressPrefix": "AzureCloud",
+                                    "destinationAddressPrefix": "[variables('addressPrefix')]",
+                                    "access": "Allow",
+                                    "priority": 1300,
+                                    "direction": "Inbound"
+                                }
+                            }
+                        ],
+                        "disallowTrafficTo3342NSG": [
+                            {
+                                "name": "public_endpoint_inbound",
+                                "properties": {
+                                    "description": "Deny inbound traffic to Managed Instance through public endpoint",
+                                    "protocol": "*",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "3342",
+                                    "sourceAddressPrefix": "*",
+                                    "destinationAddressPrefix": "[variables('addressPrefix')]",
+                                    "access": "Deny",
+                                    "priority": 1300,
+                                    "direction": "Inbound"
+                                }
+                            }
+                        ],
+                        "unionNSGs": "[if(and(parameters('publicDataEndpointEnabled'), not(empty(parameters('nsgForPublicEndpoint')))), union(variables('defaultNSGs'), variables(parameters('nsgForPublicEndpoint'))), variables('defaultNSGs'))]"
+                    },
+                    "resources": [
+                        {
+                            "condition": "[variables('createNetworkSecurityGroup')]",
+                            "type": "Microsoft.Network/networkSecurityGroups",
+                            "name": "[variables('defaultNetworkSecurityGroupName')]",
+                            "apiVersion": "2020-05-01",
+                            "location": "[parameters('location')]",
+                            "tags": "[parameters('managedInstanceTags')]",
+                            "properties": {
+                                "copy": [
+                                    {
+                                        "name": "securityRules",
+                                        "count": "[length(variables('unionNSGs'))]",
+                                        "input": {
+                                            "name": "[variables('unionNSGs')[copyIndex('securityRules')].name]",
+                                            "properties": "[variables('unionNSGs')[copyIndex('securityRules')].properties]"
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "condition": "[variables('createRouteTable')]",
+                            "type": "Microsoft.Network/routeTables",
+                            "name": "[variables('defaultRouteTableName')]",
+                            "apiVersion": "2020-05-01",
+                            "location": "[parameters('location')]",
+                            "tags": "[parameters('managedInstanceTags')]",
+                            "properties": {
+                                "disableBgpRoutePropagation": false
+                            }
+                        },
+                        {
+                            "condition": "[and(parameters('deployInExistingSubnet'), or(variables('createNetworkSecurityGroup'), variables('createRouteTable'), variables('delegateToManagedInstance')))]",
+                            "type": "Microsoft.Network/virtualNetworks/subnets",
+                            "name": "[concat(parameters('virtualNetworkName'), '/', parameters('subnetName'))]",
+                            "apiVersion": "2020-05-01",
+                            "dependsOn": [
+                                "[variables('defaultRouteTableName')]",
+                                "[variables('defaultNetworkSecurityGroupName')]"
+                            ],
+                            "properties": {
+                                "addressPrefix": "[variables('addressPrefix')]",
+                                "routeTable": {
+                                    "id": "[if(variables('createRouteTable'), resourceId('Microsoft.Network/routeTables', variables('defaultRouteTableName')), parameters('subnetObject').routeTable.id)]"
+                                },
+                                "networkSecurityGroup": {
+                                    "id": "[if(variables('createNetworkSecurityGroup'), resourceId('Microsoft.Network/networkSecurityGroups', variables('defaultNetworkSecurityGroupName')), parameters('subnetObject').networkSecurityGroup.id)]"
+                                },
+                                "serviceEndpoints": "[if(contains(parameters('subnetObject'), 'serviceEndpoints'), parameters('subnetObject').serviceEndpoints, json('[]'))]",
+                                "serviceEndpointPolicies": "[if(contains(parameters('subnetObject'), 'serviceEndpointPolicies'), parameters('subnetObject').serviceEndpointPolicies, json('[]'))]",
+                                "delegations": "[if(variables('delegateToManagedInstance'), variables('delegationsObject'), parameters('subnetObject').delegations)]"
+                            }
+                        },
+                        {
+                            "condition": "[not(parameters('deployInExistingSubnet'))]",
+                            "type": "Microsoft.Network/virtualNetworks",
+                            "name": "[parameters('virtualNetworkName')]",
+                            "apiVersion": "2020-05-01",
+                            "location": "[parameters('location')]",
+                            "tags": "[parameters('managedInstanceTags')]",
+                            "dependsOn": [
+                                "[variables('defaultRouteTableName')]",
+                                "[variables('defaultNetworkSecurityGroupName')]"
+                            ],
+                            "properties": {
+                                "addressSpace": {
+                                    "addressPrefixes": [
+                                        "[variables('defaultVirtualNetworkAddressPrefix')]"
+                                    ]
+                                },
+                                "subnets": [
+                                    {
+                                        "name": "[parameters('subnetName')]",
+                                        "properties": {
+                                            "addressPrefix": "[variables('defaultSubnetAddressPrefix')]",
+                                            "routeTable": {
+                                                "id": "[resourceId('Microsoft.Network/routeTables', variables('defaultRouteTableName'))]"
+                                            },
+                                            "networkSecurityGroup": {
+                                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('defaultNetworkSecurityGroupName'))]"
+                                            },
+                                            "delegations": "[variables('delegationsObject')]"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            "resourceGroup": "[if(parameters('deployInExistingSubnet'), parameters('virtualNetworkResourceGroupName'), resourceGroup().name)]"
+        },
+        {
+            "type": "Microsoft.Sql/managedInstances",
+            "apiVersion": "2024-08-01-preview",
+            "name": "[parameters('managedInstanceName')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[variables('deploymentName')]"
+            ],
+            "tags": "[parameters('managedInstanceTags')]",
+            "sku": {
+                "name": "[parameters('skuName')]",
+                "tier": "[parameters('skuEdition')]"
+            },
+            "identity": "[parameters('identity')]",
+            "properties": {
+                "subnetId": "[resourceId(parameters('virtualNetworkResourceGroupName'), 'Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]",
+                "storageSizeInGB": "[parameters('storageSizeInGB')]",
+                "vCores": "[parameters('vCores')]",
+                "licenseType": "[parameters('licenseType')]",
+                "hybridSecondaryUsage": "[parameters('hybridSecondaryUsage')]",
+                "hardwareFamily": "[parameters('hardwareFamily')]",
+                "dnsZonePartner": "[parameters('dnsZonePartner')]",
+                "collation": "[parameters('collation')]",
+                "proxyOverride": "[parameters('proxyOverride')]",
+                "publicDataEndpointEnabled": "[parameters('publicDataEndpointEnabled')]",
+                "minimalTlsVersion": "[parameters('minimalTlsVersion')]",
+                "timezoneId": "[parameters('timezoneId')]",
+                "requestedBackupStorageRedundancy": "[parameters('requestedBackupStorageRedundancy')]",
+                "zoneRedundant": "[parameters('zoneRedundant')]",
+                "databaseFormat": "[parameters('databaseFormat')]",
+                "instancePoolId": "[parameters('instancePoolId')]",
+                "pricingModel": "[parameters('pricingModel')]",
+                "primaryUserAssignedIdentityId": "[parameters('primaryUserAssignedIdentityId')]",
+                "federatedClientId": "[parameters('federatedClientId')]",
+                "servicePrincipal": "[parameters('servicePrincipal')]",
+                "maintenanceConfigurationId": "[parameters('maintenanceConfigurationId')]",
+                "administratorLogin": "[parameters('administratorLogin')]",
+                "administratorLoginPassword": "[parameters('administratorLoginPassword')]"
+            },
+            "resources": [
+                {
+                    "type": "Microsoft.Sql/managedInstances/startStopSchedules",
+                    "apiVersion": "2023-02-01-preview",
+                    "name": "[concat(parameters('managedInstanceName'), '/default')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Sql/managedInstances', parameters('managedInstanceName'))]"
+                    ],
+                    "properties": {
+                        "timezoneId": "[parameters('timezoneId')]",
+                        "scheduleList": [
+                            {
+                                "startDay": "Monday",
+                                "startTime": "09:00 AM",
+                                "stopDay": "Monday",
+                                "stopTime": "05:00 PM"
+                            },
+                            {
+                                "startDay": "Tuesday",
+                                "startTime": "09:00 AM",
+                                "stopDay": "Tuesday",
+                                "stopTime": "05:00 PM"
+                            },
+                            {
+                                "startDay": "Wednesday",
+                                "startTime": "09:00 AM",
+                                "stopDay": "Wednesday",
+                                "stopTime": "05:00 PM"
+                            },
+                            {
+                                "startDay": "Thursday",
+                                "startTime": "09:00 AM",
+                                "stopDay": "Thursday",
+                                "stopTime": "05:00 PM"
+                            },
+                            {
+                                "startDay": "Friday",
+                                "startTime": "09:00 AM",
+                                "stopDay": "Friday",
+                                "stopTime": "05:00 PM"
+                            }
+                        ]
+                    },
+                    "condition": "[equals(parameters('pricingModel'), 'Freemium')]"
+                },
+                {
+                    "type": "advancedThreatProtectionSettings",
+                    "apiVersion": "2022-02-01-preview",
+                    "name": "Default",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Sql/managedInstances', parameters('managedInstanceName'))]"
+                    ],
+                    "properties": {
+                        "state": "Enabled"
+                    },
+                    "condition": "[parameters('enableADS')]"
+                },
+                {
+                    "type": "vulnerabilityAssessments",
+                    "apiVersion": "2018-06-01-preview",
+                    "name": "Default",
+                    "dependsOn": [
+                        "[concat('Microsoft.Sql/managedInstances/', parameters('managedInstanceName'))]",
+                        "[concat('Microsoft.Storage/storageAccounts/', variables('storageName'))]",
+                        "[concat('Microsoft.Sql/managedInstances/', parameters('managedInstanceName'), '/advancedThreatProtectionSettings/Default')]"
+                    ],
+                    "properties": {
+                        "storageContainerPath": "[if(parameters('enableVA'), concat(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))).primaryEndpoints.blob, 'vulnerability-assessment'), '')]",
+                        "storageAccountAccessKey": "[if(parameters('enableVA'), listKeys(variables('storageName'), '2018-02-01').keys[0].value, '')]",
+                        "recurringScans": {
+                            "isEnabled": true,
+                            "emailSubscriptionAdmins": false
+                        }
+                    },
+                    "condition": "[parameters('enableVA')]"
+                }
+            ]
+        }
+    ]
+}

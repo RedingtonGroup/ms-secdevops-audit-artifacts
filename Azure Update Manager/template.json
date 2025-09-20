@@ -1,0 +1,147 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "maintenanceConfigName": {
+            "type": "String",
+            "metadata": {
+                "description": "This is name of the maintenance config being created."
+            }
+        },
+        "maintenanceConfigLocation": {
+            "type": "String",
+            "metadata": {
+                "description": "This is location of the maintenance config being created."
+            }
+        },
+        "maintenanceSchedule": {
+            "type": "Object",
+            "metadata": {
+                "description": "This is schedule information associated with the Maintenance configuration."
+            }
+        },
+        "maintenanceScope": {
+            "type": "String",
+            "metadata": {
+                "description": "Gets or sets maintenanceScope of the configuration."
+            }
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Maintenance/maintenanceConfigurations",
+            "apiVersion": "2023-04-01",
+            "name": "[parameters('maintenanceConfigName')]",
+            "location": "[parameters('maintenanceConfigLocation')]",
+            "tags": {
+                "application": "gis"
+            },
+            "properties": {
+                "maintenanceScope": "InGuestPatch",
+                "installPatches": {
+                    "linuxParameters": {
+                        "classificationsToInclude": [
+                            "Critical",
+                            "Security"
+                        ],
+                        "packageNameMasksToExclude": null,
+                        "packageNameMasksToInclude": null
+                    },
+                    "windowsParameters": {
+                        "classificationsToInclude": [
+                            "Critical",
+                            "Security"
+                        ],
+                        "kbNumbersToExclude": null,
+                        "kbNumbersToInclude": null
+                    },
+                    "rebootSetting": "NeverReboot"
+                },
+                "extensionProperties": {
+                    "InGuestPatchMode": "User"
+                },
+                "maintenanceWindow": {
+                    "startDateTime": "2025-09-16 00:00",
+                    "duration": "03:55",
+                    "timeZone": "India Standard Time",
+                    "expirationDateTime": null,
+                    "recurEvery": "1Week Saturday"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-08-01",
+            "name": "[uniqueString('rg-gis-01vm-update8d704685-c402-4677-9e96-18dd3ec83ddc')]",
+            "dependsOn": [
+                "[concat('Microsoft.Maintenance/maintenanceConfigurations/', parameters('maintenanceConfigName'))]"
+            ],
+            "tags": {},
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "http://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {},
+                    "resources": [
+                        {
+                            "apiVersion": "2023-04-01",
+                            "type": "Microsoft.Maintenance/configurationAssignments",
+                            "name": "vm-updateAssignment",
+                            "location": "centralindia",
+                            "scope": "microsoft.compute/virtualMachines/gis-app01",
+                            "tags": {},
+                            "properties": {
+                                "maintenanceConfigurationId": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/rg-audit/providers/Microsoft.Maintenance/maintenanceConfigurations/vm-update"
+                            }
+                        },
+                        {
+                            "apiVersion": "2023-04-01",
+                            "type": "Microsoft.Maintenance/configurationAssignments",
+                            "name": "vm-updateAssignment",
+                            "location": "centralindia",
+                            "scope": "microsoft.compute/virtualMachines/gis-app02",
+                            "tags": {},
+                            "properties": {
+                                "maintenanceConfigurationId": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/rg-audit/providers/Microsoft.Maintenance/maintenanceConfigurations/vm-update"
+                            }
+                        }
+                    ]
+                },
+                "parameters": {}
+            },
+            "subscriptionId": "8d704685-c402-4677-9e96-18dd3ec83ddc",
+            "resourceGroup": "rg-gis-01"
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-08-01",
+            "name": "[uniqueString('Scope_8d704685-c402-4677-9e96-18dd3ec83ddc_vm-update_centralindia')]",
+            "location": "centralindia",
+            "dependsOn": [
+                "[concat('Microsoft.Maintenance/maintenanceConfigurations/', parameters('maintenanceConfigName'))]"
+            ],
+            "tags": {},
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "http://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {},
+                    "resources": [
+                        {
+                            "apiVersion": "2023-04-01",
+                            "type": "Microsoft.Maintenance/configurationAssignments",
+                            "name": "vm-updateDynamicAssignment1",
+                            "properties": {
+                                "maintenanceConfigurationId": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/rg-audit/providers/Microsoft.Maintenance/maintenanceConfigurations/vm-update"
+                            }
+                        }
+                    ]
+                },
+                "parameters": {}
+            },
+            "subscriptionId": "8d704685-c402-4677-9e96-18dd3ec83ddc"
+        }
+    ]
+}

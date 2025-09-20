@@ -1,0 +1,35 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "centralindia"
+        },
+        "privateEndpointName": {
+            "value": "gis-db-pe"
+        },
+        "privateLinkResource": {
+            "value": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/rg-gis-01/providers/Microsoft.Sql/managedInstances/gis-db-srv"
+        },
+        "targetSubResource": {
+            "value": [
+                "managedInstance"
+            ]
+        },
+        "requestMessage": {
+            "value": "gisdb-pe"
+        },
+        "subnet": {
+            "value": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/RG_VNET/providers/Microsoft.Network/virtualNetworks/vnet-spoke-01/subnets/subnet-gisdb"
+        },
+        "virtualNetworkId": {
+            "value": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/RG_VNET/providers/Microsoft.Network/virtualNetworks/vnet-spoke-01"
+        },
+        "virtualNetworkResourceGroup": {
+            "value": "RG_VNET"
+        },
+        "subnetDeploymentName": {
+            "value": "UpdateSubnetDeployment-20250915130251"
+        }
+    }
+}

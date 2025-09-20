@@ -1,0 +1,65 @@
+[
+  {
+    "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/RG_VNET/providers/Microsoft.Resources/deployments/Microsoft.Template-20250915133813/operations/0F86427A7F6878F3",
+    "operationId": "0F86427A7F6878F3",
+    "properties": {
+      "provisioningOperation": "Create",
+      "provisioningState": "Succeeded",
+      "timestamp": "2025-09-15T08:08:18.1236284Z",
+      "duration": "PT38.6669021S",
+      "trackingId": "32683f93-f643-4923-87d7-4cfd8f37f649",
+      "statusCode": "OK",
+      "targetResource": {
+        "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/RG_VNET/providers/Microsoft.Network/firewallPolicies/gis-fw-app/ruleCollectionGroups/DefaultApplicationRuleCollectionGroup",
+        "resourceType": "Microsoft.Network/firewallPolicies/ruleCollectionGroups",
+        "resourceName": "gis-fw-app/DefaultApplicationRuleCollectionGroup"
+      }
+    }
+  },
+  {
+    "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/RG_VNET/providers/Microsoft.Resources/deployments/Microsoft.Template-20250915133813/operations/F0EDE1C141B13EE0",
+    "operationId": "F0EDE1C141B13EE0",
+    "properties": {
+      "provisioningOperation": "Create",
+      "provisioningState": "Succeeded",
+      "timestamp": "2025-09-15T08:08:18.1236284Z",
+      "duration": "PT25.05504S",
+      "trackingId": "d8839842-dbbd-4b17-a169-97b59dfa2a74",
+      "statusCode": "OK",
+      "targetResource": {
+        "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/RG_VNET/providers/Microsoft.Network/firewallPolicies/gis-fw-app/ruleCollectionGroups/DefaultNetworkRuleCollectionGroup",
+        "resourceType": "Microsoft.Network/firewallPolicies/ruleCollectionGroups",
+        "resourceName": "gis-fw-app/DefaultNetworkRuleCollectionGroup"
+      }
+    }
+  },
+  {
+    "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/RG_VNET/providers/Microsoft.Resources/deployments/Microsoft.Template-20250915133813/operations/973B6ACD948FE9B3",
+    "operationId": "973B6ACD948FE9B3",
+    "properties": {
+      "provisioningOperation": "Create",
+      "provisioningState": "Succeeded",
+      "timestamp": "2025-09-15T08:08:18.1236284Z",
+      "duration": "PT12.5787089S",
+      "trackingId": "415b291e-ca5e-4772-b4da-61cca0cc4833",
+      "statusCode": "OK",
+      "targetResource": {
+        "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/RG_VNET/providers/Microsoft.Network/firewallPolicies/gis-fw-app",
+        "resourceType": "Microsoft.Network/firewallPolicies",
+        "resourceName": "gis-fw-app"
+      }
+    }
+  },
+  {
+    "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/RG_VNET/providers/Microsoft.Resources/deployments/Microsoft.Template-20250915133813/operations/08584436831886883533",
+    "operationId": "08584436831886883533",
+    "properties": {
+      "provisioningOperation": "EvaluateDeploymentOutput",
+      "provisioningState": "Succeeded",
+      "timestamp": "2025-09-15T08:08:18.1236284Z",
+      "duration": "PT39.182616S",
+      "trackingId": "3e363dd6-3c68-4a88-aadd-455050eac3b4",
+      "statusCode": "OK"
+    }
+  }
+]

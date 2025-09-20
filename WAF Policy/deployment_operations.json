@@ -1,0 +1,31 @@
+[
+  {
+    "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/RG_VNET/providers/Microsoft.Resources/deployments/WAFPolicyCreation-20250916173905/operations/39379C48E56FF8B7",
+    "operationId": "39379C48E56FF8B7",
+    "properties": {
+      "provisioningOperation": "Create",
+      "provisioningState": "Succeeded",
+      "timestamp": "2025-09-16T12:09:08.9876397Z",
+      "duration": "PT1.6506762S",
+      "trackingId": "6bcdfd47-19be-4e6c-972a-e5f47fa23b02",
+      "statusCode": "OK",
+      "targetResource": {
+        "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/RG_VNET/providers/Microsoft.Network/applicationGatewayWebApplicationFirewallPolicies/waf",
+        "resourceType": "Microsoft.Network/applicationGatewayWebApplicationFirewallPolicies",
+        "resourceName": "waf"
+      }
+    }
+  },
+  {
+    "id": "/subscriptions/8d704685-c402-4677-9e96-18dd3ec83ddc/resourceGroups/RG_VNET/providers/Microsoft.Resources/deployments/WAFPolicyCreation-20250916173905/operations/08584435823378685301",
+    "operationId": "08584435823378685301",
+    "properties": {
+      "provisioningOperation": "EvaluateDeploymentOutput",
+      "provisioningState": "Succeeded",
+      "timestamp": "2025-09-16T12:09:08.9876397Z",
+      "duration": "PT2.1506776S",
+      "trackingId": "b5c3ecf5-a52f-4bef-995f-2eb7a80867e3",
+      "statusCode": "OK"
+    }
+  }
+]
