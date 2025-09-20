@@ -18,38 +18,42 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the repo
+      # Step 1: Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Step 2: Run MSDO scan
+      # Step 2: Run Microsoft Security DevOps Scan
       - name: Run Microsoft Security DevOps Scan
         uses: microsoft/security-devops-action@v1
         with:
           categories: 'IaC,Secrets'
 
-      # Step 3: Verify MSDO results
+      # Step 3: List MSDO results
       - name: List MSDO results
         run: ls -R ${{ github.workspace }}/.gdn || echo "No results found"
 
-      # Step 4: Convert SARIF to TXT for readability
+      # Step 4: Install required tools for PDF conversion
+      - name: Install wkhtmltopdf
+        run: sudo apt-get update && sudo apt-get install -y wkhtmltopdf jq
+
+      # Step 5: Convert SARIF to TXT for readability
       - name: Convert MSDO results to TXT
         run: |
           mkdir -p ${{ github.workspace }}/.gdn/pdf
           if [ -f ${{ github.workspace }}/.gdn/msdo.sarif ]; then
-            sudo apt-get update && sudo apt-get install -y jq pandoc
             jq '.runs[].results[] | {ruleId, message: .message.text, level: .level, locations: .locations}' \
               ${{ github.workspace }}/.gdn/msdo.sarif > ${{ github.workspace }}/.gdn/pdf/msdo-results.txt
           else
             echo "No SARIF file found!" > ${{ github.workspace }}/.gdn/pdf/msdo-results.txt
           fi
 
-      # Step 5: Convert TXT to PDF
+      # Step 6: Convert TXT to PDF using wkhtmltopdf
       - name: Convert TXT to PDF
         run: |
-          pandoc ${{ github.workspace }}/.gdn/pdf/msdo-results.txt -o ${{ github.workspace }}/.gdn/pdf/msdo-results.pdf
+          echo "<pre>$(cat ${{ github.workspace }}/.gdn/pdf/msdo-results.txt)</pre>" > ${{ github.workspace }}/.gdn/pdf/msdo-results.html
+          wkhtmltopdf ${{ github.workspace }}/.gdn/pdf/msdo-results.html ${{ github.workspace }}/.gdn/pdf/msdo-results.pdf
 
-      # Step 6: Upload PDF artifact
+      # Step 7: Upload PDF artifact
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
         with:
@@ -58,7 +62,7 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
 
-      # Step 7: Optional - Upload SARIF for GitHub Security (requires GHAS)
+      # Step 8: Optional - Upload SARIF for GitHub Security (requires GHAS)
       - name: Upload SARIF results to GitHub Security
         if: ${{ always() }}
         uses: github/codeql-action/upload-sarif@v3
