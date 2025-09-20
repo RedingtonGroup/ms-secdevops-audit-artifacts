@@ -8,36 +8,61 @@ on:
   workflow_dispatch:
 
 permissions:
-  actions: read           
+  actions: read
   contents: read
-  security-events: write  
-  id-token: write         
+  security-events: write
+  id-token: write
 
 jobs:
   msdo:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout the repo
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Step 2: Run MSDO scan
       - name: Run Microsoft Security DevOps Scan
         uses: microsoft/security-devops-action@v1
         with:
           categories: 'IaC,Secrets'
 
+      # Step 3: Verify MSDO results
       - name: List MSDO results
         run: ls -R ${{ github.workspace }}/.gdn || echo "No results found"
 
-      - name: Upload MSDO artifacts
+      # Step 4: Convert SARIF to TXT for readability
+      - name: Convert MSDO results to TXT
+        run: |
+          mkdir -p ${{ github.workspace }}/.gdn/pdf
+          if [ -f ${{ github.workspace }}/.gdn/msdo.sarif ]; then
+            sudo apt-get update && sudo apt-get install -y jq pandoc
+            jq '.runs[].results[] | {ruleId, message: .message.text, level: .level, locations: .locations}' \
+              ${{ github.workspace }}/.gdn/msdo.sarif > ${{ github.workspace }}/.gdn/pdf/msdo-results.txt
+          else
+            echo "No SARIF file found!" > ${{ github.workspace }}/.gdn/pdf/msdo-results.txt
+          fi
+
+      # Step 5: Convert TXT to PDF
+      - name: Convert TXT to PDF
+        run: |
+          pandoc ${{ github.workspace }}/.gdn/pdf/msdo-results.txt -o ${{ github.workspace }}/.gdn/pdf/msdo-results.pdf
+
+      # Step 6: Upload PDF artifact
+      - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
         with:
-          name: msdo-results
-          path: ${{ github.workspace }}/.gdn/**
+          name: msdo-results-pdf
+          path: ${{ github.workspace }}/.gdn/pdf/msdo-results.pdf
           if-no-files-found: warn
           retention-days: 30
 
+      # Step 7: Optional - Upload SARIF for GitHub Security (requires GHAS)
       - name: Upload SARIF results to GitHub Security
+        if: ${{ always() }}
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: ${{ github.workspace }}/.gdn/msdo.sarif
+          checkout_path: ${{ github.workspace }}
+          token: ${{ secrets.GITHUB_TOKEN }}
